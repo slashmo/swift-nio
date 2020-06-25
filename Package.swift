@@ -23,7 +23,8 @@ var targets: [PackageDescription.Target] = [
                            "CNIODarwin",
                            "NIOConcurrencyHelpers",
                            "CNIOAtomics",
-                           "CNIOSHA1"]),
+                           "CNIOSHA1",
+                           "Baggage"]),
     .target(name: "NIOFoundationCompat", dependencies: ["NIO"]),
     .target(name: "CNIOAtomics", dependencies: []),
     .target(name: "CNIOSHA1", dependencies: []),
@@ -94,6 +95,7 @@ let package = Package(
         .library(name: "NIOTestUtils", targets: ["NIOTestUtils"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/slashmo/gsoc-swift-baggage-context", .branch("main"))
     ],
     targets: targets
 )
