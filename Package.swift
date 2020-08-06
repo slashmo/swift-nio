@@ -95,7 +95,7 @@ let package = Package(
         .library(name: "NIOTestUtils", targets: ["NIOTestUtils"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/slashmo/gsoc-swift-baggage-context", .branch("main"))
+        .package(name: "swift-baggage-context", url: "https://github.com/slashmo/gsoc-swift-baggage-context.git", .upToNextMinor(from: "0.1.0")),
     ],
     targets: targets
 )
