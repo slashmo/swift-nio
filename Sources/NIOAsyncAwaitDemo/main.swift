@@ -27,6 +27,7 @@ defer {
     try! group.syncShutdownGracefully()
 }
 
+@available(macOS 9999, *)
 func makeHTTPChannel(host: String, port: Int) async throws -> AsyncChannelIO<HTTPRequestHead, NIOHTTPClientResponseFull> {
     let channel = try await ClientBootstrap(group: group).connect(host: host, port: port).get()
     try await channel.pipeline.addHTTPClientHandlers().get()
@@ -35,6 +36,7 @@ func makeHTTPChannel(host: String, port: Int) async throws -> AsyncChannelIO<HTT
     return try await AsyncChannelIO<HTTPRequestHead, NIOHTTPClientResponseFull>(channel).start()
 }
 
+@available(macOS 9999, *)
 func main() async {
     do {
         let channel = try await makeHTTPChannel(host: "httpbin.org", port: 80)
@@ -61,13 +63,17 @@ func main() async {
     }
 }
 
-let dg = DispatchGroup()
-dg.enter()
-let task = detach {
-    await main()
-    dg.leave()
+if #available(macOS 9999, *) {
+    let dg = DispatchGroup()
+    dg.enter()
+    let task = detach {
+        await main()
+        dg.leave()
+    }
+    dg.wait()
+} else {
+    // Fallback on earlier versions
 }
-dg.wait()
 #else
 print("ERROR: This demo only works with async/await enabled (NIO.System.hasAsyncAwaitSupport = \(NIO.System.hasAsyncAwaitSupport))")
 print("Try:   swift run -Xswiftc -Xfrontend -Xswiftc -enable-experimental-concurrency NIOAsyncAwaitDemo")
